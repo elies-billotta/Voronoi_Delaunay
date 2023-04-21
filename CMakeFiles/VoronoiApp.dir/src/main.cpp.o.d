@@ -1,7 +1,7 @@
 CMakeFiles/VoronoiApp.dir/src/main.cpp.o: \
- /home/eniem/IMAC/S2/Voronoi_delaunay/src/main.cpp \
+ /home/eniem/IMAC/S2/Voronoi_Delaunay/src/main.cpp \
  /usr/include/stdc-predef.h \
- /home/eniem/IMAC/S2/Voronoi_delaunay/src/application_ui.h \
+ /home/eniem/IMAC/S2/Voronoi_Delaunay/src/application_ui.h \
  /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_main.h \
  /usr/include/SDL2/SDL_stdinc.h /usr/include/SDL2/SDL_config.h \
  /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
@@ -263,7 +263,7 @@ CMakeFiles/VoronoiApp.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
  /usr/include/c++/11/bits/charconv.h \
  /usr/include/c++/11/bits/basic_string.tcc \
- /home/eniem/IMAC/S2/Voronoi_delaunay/src/SDL2_gfxPrimitives.h \
+ /home/eniem/IMAC/S2/Voronoi_Delaunay/src/SDL2_gfxPrimitives.h \
  /usr/include/SDL2/SDL.h /usr/include/c++/11/vector \
  /usr/include/c++/11/bits/stl_uninitialized.h \
  /usr/include/c++/11/bits/stl_vector.h \

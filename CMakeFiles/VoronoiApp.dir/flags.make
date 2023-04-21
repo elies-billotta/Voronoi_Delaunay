@@ -5,13 +5,13 @@
 # compile CXX with /usr/bin/c++
 C_DEFINES = 
 
-C_INCLUDES = -I/home/eniem/IMAC/S2/Voronoi_delaunay/src -I/usr/include/SDL2
+C_INCLUDES = -I/home/eniem/IMAC/S2/Voronoi_Delaunay/src -I/usr/include/SDL2
 
 C_FLAGS = -Wall -Wextra -Wpedantic
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/eniem/IMAC/S2/Voronoi_delaunay/src -I/usr/include/SDL2
+CXX_INCLUDES = -I/home/eniem/IMAC/S2/Voronoi_Delaunay/src -I/usr/include/SDL2
 
 CXX_FLAGS = -Wall -Wextra -Wpedantic
 

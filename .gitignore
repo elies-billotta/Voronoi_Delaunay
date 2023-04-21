@@ -4,3 +4,5 @@ bin/
 .vscode/
 SDL2
 .DS_Store
+CMakeFiles
+CMakeCache.txt
