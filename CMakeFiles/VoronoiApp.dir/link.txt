@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/VoronoiApp.dir/src/SDL2_gfxPrimitives.c.o CMakeFiles/VoronoiApp.dir/src/application_ui.cpp.o CMakeFiles/VoronoiApp.dir/src/main.cpp.o -o bin/VoronoiApp  -L/usr/lib/x86_64-linux-gnu  -lSDL2 
