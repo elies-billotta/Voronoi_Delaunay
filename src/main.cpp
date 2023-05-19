@@ -219,14 +219,14 @@ void delaunayTriangulation(std::vector<Coords>& points, std::vector<Triangle>& t
     triangles.push_back({p1, p2, p3});
 
     // Pour chaque point P du repère
-    for (const auto& point : points)
+    for (const Coords& point : points)
     {
         std::vector<Segment> LS;
 
         // Pour chaque triangle T déjà créé
-        for (auto it = triangles.begin(); it != triangles.end();)
+        for (std::vector<Triangle>::iterator i = triangles.begin(); i != triangles.end();)
         {
-            const auto& triangle = *it;
+            const Triangle& triangle = *i;
 
             // Vérifier si le cercle circonscrit contient le point P
             float xc, yc, rsqr;
@@ -239,18 +239,18 @@ void delaunayTriangulation(std::vector<Coords>& points, std::vector<Triangle>& t
                 LS.push_back({triangle.p3, triangle.p1});
 
                 // Enlever le triangle de la liste
-                it = triangles.erase(it);
+                i = triangles.erase(i);
             }
             else
             {
-                ++it;
+                ++i;
             }
         }
 
         std::vector<Segment> uniqueSegments;
 
         // Supprimer les doublons dans LS
-        for (const auto& segment : LS)
+        for (const Segment& segment : LS)
         {
             if (std::find(uniqueSegments.begin(), uniqueSegments.end(), segment) == uniqueSegments.end())
             {
@@ -259,12 +259,13 @@ void delaunayTriangulation(std::vector<Coords>& points, std::vector<Triangle>& t
         }
 
         // Créer de nouveaux triangles avec les segments et le point P
-        for (const auto& segment : uniqueSegments)
+        for (const Segment& segment : uniqueSegments)
         {
             triangles.push_back({segment.p1, segment.p2, point});
         }
     }
 }
+
 
 int main(int argc, char **argv)
 {
