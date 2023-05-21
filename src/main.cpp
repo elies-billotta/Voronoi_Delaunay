@@ -5,7 +5,8 @@
 #include <map>
 #include <queue>
 #include <algorithm>
-#include <unordered_set>
+#include <set>
+#include <iostream>
 
 #define EPSILON 0.0001f
 
@@ -16,6 +17,11 @@ struct Coords
     bool operator==(const Coords& other) const
     {
         return x == other.x and y == other.y;
+    }
+
+    bool operator!=(const Coords& other) const
+    {
+        return !(*this == other);
     }
 
 };
@@ -69,30 +75,31 @@ struct Triangle
 
 struct Polygon 
 {
-    std::vector<Segment> segments;
+    std::vector<Coords> points;
 
-    //get the X coordinates of the points of the polygon
     std::vector<int> getXCoords() const
     {
         std::vector<int> xCoords;
-        for (const Segment& segment : segments)
+        for (const Coords& point : points)
         {
-            xCoords.push_back(segment.p1.x);
-            xCoords.push_back(segment.p2.x);
+            xCoords.push_back(point.x);
         }
         return xCoords;
     }
 
-    //get the Y coordinates of the points of the polygon
     std::vector<int> getYCoords() const
     {
         std::vector<int> yCoords;
-        for (const Segment& segment : segments)
+        for (const Coords& point : points)
         {
-            yCoords.push_back(segment.p1.y);
-            yCoords.push_back(segment.p2.y);
+            yCoords.push_back(point.y);
         }
         return yCoords;
+    }
+
+    void addPoint(int x, int y)
+    {
+        points.push_back({x, y});
     }
 
 };
@@ -105,15 +112,8 @@ struct Application
     std::vector<Coords> points;
     std::vector<Segment> segments;  
     std::vector<Triangle> triangles;
-    std::vector<Polygon> polygonsVoronoi;
+    std::vector<Coords> pointsVoronoi;
 };
-
-bool compareCoords(const Coords p1, const Coords p2)
-{
-    if (p1.y == p2.y)
-        return p1.x < p2.x;
-    return p1.y < p2.y;
-}
 
 void drawPoints(SDL_Renderer *renderer, const std::vector<Coords> &points)
 {
@@ -125,7 +125,7 @@ void drawPoints(SDL_Renderer *renderer, const std::vector<Coords> &points)
 
 void drawSegments(SDL_Renderer *renderer, const std::vector<Segment> &segments)
 {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE); // Définir la couleur du rendu en rouge
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE); // Définir la couleur du rendu en rouge
 
     for (const Segment &segment : segments)
     {
@@ -144,13 +144,24 @@ void drawTriangles(SDL_Renderer *renderer, const std::vector<Triangle> &triangle
     }
 }
 
+void randomColor(int *r, int *g, int *b)
+{
+    *r = rand() % 255;
+    *g = rand() % 255;
+    *b = rand() % 255;
+}
+
 void drawPolygon(SDL_Renderer *renderer, const Polygon &polygon)
 {
+    //pick a random color
+    int r, g, b;
+    randomColor(&r, &g, &b);
     std::vector<Sint16> xCoords(polygon.getXCoords().begin(), polygon.getXCoords().end());
     std::vector<Sint16> yCoords(polygon.getYCoords().begin(), polygon.getYCoords().end());
 
-    filledPolygonRGBA(renderer, xCoords.data(), yCoords.data(), xCoords.size(), rand() % 255, rand() % 255, rand() % 255, SDL_ALPHA_OPAQUE);
+    filledPolygonRGBA(renderer, xCoords.data(), yCoords.data(), xCoords.size(), r, g, b, SDL_ALPHA_OPAQUE);
 }
+
 /*
    Détermine si un point se trouve dans un cercle définit par trois points
    Retourne, par les paramètres, le centre et le rayon
@@ -221,33 +232,12 @@ void draw(SDL_Renderer *renderer, const Application &app)
     /* Remplissez cette fonction pour faire l'affichage du jeu */
     int width, height;
     SDL_GetRendererOutputSize(renderer, &width, &height);
-
     drawPoints(renderer, app.points);
-    //drawTriangles(renderer, app.triangles);
 
-    //dessiner le centre des cercles circonscrits
-    for (const Triangle& triangle : app.triangles)
+    //dessiner les points du diagramme de Voronoi
+    for (const Coords& point : app.pointsVoronoi)
     {
-        float xc, yc, rsqr;
-        CircumCircle(triangle.p1.x, triangle.p1.y, triangle.p1.x, triangle.p1.y, triangle.p2.x, triangle.p2.y, triangle.p3.x, triangle.p3.y,
-                     &xc, &yc, &rsqr);
-        filledCircleRGBA(renderer, xc, yc, 3, 255, 0, 0, SDL_ALPHA_OPAQUE);
-    }
-
-    //dessiner les cercles circonscrits
-    for (const Triangle& triangle : app.triangles)
-    {
-        float xc, yc, rsqr;
-        CircumCircle(triangle.p1.x, triangle.p1.y, triangle.p1.x, triangle.p1.y, triangle.p2.x, triangle.p2.y, triangle.p3.x, triangle.p3.y,
-                     &xc, &yc, &rsqr);
-        circleRGBA(renderer, xc, yc, sqrt(rsqr), 30, 30, 30, SDL_ALPHA_OPAQUE);
-    }
-
-    //dessiner les segments des polygones de voronoi
-
-    for (const Polygon& polygon : app.polygonsVoronoi)
-    {
-        drawPolygon(renderer, polygon);
+        filledCircleRGBA(renderer, point.x, point.y, 3, 255, 0, 0, SDL_ALPHA_OPAQUE);
     }
 
     drawSegments(renderer, app.segments);
@@ -260,7 +250,6 @@ bool comparePointsX(const Coords& p1, const Coords& p2)
     return p1.x < p2.x;
 }
 
-
 void delaunayTriangulation(std::vector<Coords>& points, std::vector<Triangle>& triangles)
 {
     // Trier les points selon leur coordonnée x
@@ -269,7 +258,7 @@ void delaunayTriangulation(std::vector<Coords>& points, std::vector<Triangle>& t
     // Vider la liste existante de triangles
     triangles.clear();
 
-    // Créer un très grand triangle
+    // Créer un très grand triangle au bord de l'écran
     Coords p1{-1000, -1000};
     Coords p2{500, 3000};
     Coords p3{1500, -1000};
@@ -341,31 +330,13 @@ void construitVoronoi(Application &app)
                 CircumCircle(triangle2.p1.x, triangle2.p1.y, triangle2.p1.x, triangle2.p1.y, triangle2.p2.x, triangle2.p2.y, triangle2.p3.x, triangle2.p3.y,
                              &xc2, &yc2, &rsqr2);
 
-               /* //si l'un des deux point appartient à un polygone, on rajoute le segment au polygone
-                bool segmentDejaPresent = false;
-                for (Polygon& polygon : app.polygonsVoronoi)
-                {
-                    if (polygon.segments.size() > 0)
-                    {
-                        if (polygon.segments[0].p1 == triangle.p1 || polygon.segments[0].p1 == triangle.p2 || polygon.segments[0].p1 == triangle.p3)
-                        {
-                            polygon.segments.push_back({{xc, yc}, {xc2, yc2}});
-                            segmentDejaPresent = true;
-                        }
-                        else if (polygon.segments[0].p1 == triangle2.p1 || polygon.segments[0].p1 == triangle2.p2 || polygon.segments[0].p1 == triangle2.p3)
-                        {
-                            polygon.segments.push_back({{xc, yc}, {xc2, yc2}});
-                            segmentDejaPresent = true;
-                        }
-                    }
-                    else
-                    {
-                        polygon.segments.push_back({{xc, yc}, {xc2, yc2}});
-                        segmentDejaPresent = true;
-                    }
-                }*/
+                app.pointsVoronoi.push_back(Coords{xc, yc});
+                app.pointsVoronoi.push_back(Coords{xc2, yc2});
 
-                app.segments.push_back({{xc, yc}, {xc2, yc2}});
+                //on vérifie que le segment n'est pas déjà dans la liste
+                Segment segment{{xc, yc}, {xc2, yc2}};
+                if (std::find(app.segments.begin(), app.segments.end(), segment) == app.segments.end())
+                    app.segments.push_back(segment);
             }
         }
     }   
@@ -394,6 +365,8 @@ bool handleEvent(Application &app)
                 app.focus.x = e.button.x;
                 app.focus.y = e.button.y;
                 app.points.clear();
+                app.pointsVoronoi.clear();
+                app.segments.clear();
             }
             else if (e.button.button == SDL_BUTTON_LEFT)
             {
