@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/eniem/IMAC/S2/Voronoi_Delaunay
+CMAKE_SOURCE_DIR = /home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/eniem/IMAC/S2/Voronoi_Delaunay
+CMAKE_BINARY_DIR = /home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/VoronoiApp.dir/clean
 CMakeFiles/VoronoiApp.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VoronoiApp.dir/build.make CMakeFiles/VoronoiApp.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VoronoiApp.dir/build.make CMakeFiles/VoronoiApp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/eniem/IMAC/S2/Voronoi_Delaunay/CMakeFiles --progress-num=1,2,3,4 "Built target VoronoiApp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/CMakeFiles --progress-num=1,2,3,4 "Built target VoronoiApp"
 .PHONY : CMakeFiles/VoronoiApp.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/VoronoiApp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/eniem/IMAC/S2/Voronoi_Delaunay/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/VoronoiApp.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/eniem/IMAC/S2/Voronoi_Delaunay/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/CMakeFiles 0
 .PHONY : CMakeFiles/VoronoiApp.dir/rule
 
 # Convenience name for target.
@@ -107,7 +107,7 @@ CMakeFiles/VoronoiApp.dir/clean:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -P /home/eniem/IMAC/S2/Voronoi_Delaunay/CMakeFiles/VerifyGlobs.cmake
+	$(CMAKE_COMMAND) -P /home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/CMakeFiles/VerifyGlobs.cmake
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

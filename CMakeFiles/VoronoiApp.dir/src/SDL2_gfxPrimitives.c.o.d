@@ -1,5 +1,5 @@
 CMakeFiles/VoronoiApp.dir/src/SDL2_gfxPrimitives.c.o: \
- /home/eniem/IMAC/S2/Voronoi_Delaunay/src/SDL2_gfxPrimitives.c \
+ /home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/src/SDL2_gfxPrimitives.c \
  /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -58,7 +58,7 @@ CMakeFiles/VoronoiApp.dir/src/SDL2_gfxPrimitives.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/strings.h \
- /home/eniem/IMAC/S2/Voronoi_Delaunay/src/SDL2_gfxPrimitives.h \
+ /home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/src/SDL2_gfxPrimitives.h \
  /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_main.h \
  /usr/include/SDL2/SDL_stdinc.h /usr/include/SDL2/SDL_config.h \
  /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \

@@ -1,5 +1,6 @@
 #include "application_ui.h"
 #include "SDL2_gfxPrimitives.h"
+#include <SDL2/SDL.h>
 #include <vector>
 #include <list>
 #include <map>
@@ -137,7 +138,7 @@ void drawPoints(SDL_Renderer *renderer, const std::vector<Coords> &points)
 {
     for (std::size_t i = 0; i < points.size(); i++)
     {
-        filledCircleRGBA(renderer, points[i].x, points[i].y, 3, 240, 240, 23, SDL_ALPHA_OPAQUE);
+        filledCircleRGBA(renderer, points[i].x, points[i].y, 3, 0, 0, 0, SDL_ALPHA_OPAQUE);
     }
 }
 
@@ -169,16 +170,22 @@ void randomColor(int *r, int *g, int *b)
     *b = rand() % 255;
 }
 
-void drawPolygon(SDL_Renderer *renderer, const Polygon &polygon)
+void drawPolygon(SDL_Renderer *renderer, const std::vector<Polygon> &polygons)
 {
-    //pick a random color
-    int r, g, b;
-    randomColor(&r, &g, &b);
-    std::vector<Sint16> xCoords(polygon.getXCoords().begin(), polygon.getXCoords().end());
-    std::vector<Sint16> yCoords(polygon.getYCoords().begin(), polygon.getYCoords().end());
+    for (const Polygon &polygon : polygons)
+    {
+        int r, g, b;
+        randomColor(&r, &g, &b);
+        std::vector<int> xCoords = polygon.getXCoords();
+        std::vector<int> yCoords = polygon.getYCoords();
 
-    filledPolygonRGBA(renderer, xCoords.data(), yCoords.data(), xCoords.size(), r, g, b, SDL_ALPHA_OPAQUE);
+        // Convertir les coordonnées int en coordonnées Sint16
+        std::vector<Sint16> xCoordsSint16(xCoords.begin(), xCoords.end());
+        std::vector<Sint16> yCoordsSint16(yCoords.begin(), yCoords.end());
+        filledPolygonRGBA(renderer, xCoordsSint16.data(), yCoordsSint16.data(), xCoordsSint16.size(), r, g, b, SDL_ALPHA_OPAQUE);
+    }
 }
+
 
 /*
    Détermine si un point se trouve dans un cercle définit par trois points
@@ -250,32 +257,8 @@ void draw(SDL_Renderer *renderer, const Application &app)
     /* Remplissez cette fonction pour faire l'affichage du jeu */
     int width, height;
     SDL_GetRendererOutputSize(renderer, &width, &height);
+    drawPolygon(renderer, app.polygons);
     drawPoints(renderer, app.points);
-    drawTriangles(renderer, app.triangles);
-
-
-    //dessiner les points du diagramme de Voronoi
-    for (const Coords& point : app.pointsVoronoi)
-    {
-        filledCircleRGBA(renderer, point.x, point.y, 3, 255, 0, 0, SDL_ALPHA_OPAQUE);
-    }
-
-    //dessiner les cercles circonscrits
-    for (const Triangle& triangle : app.triangles)
-    {
-        float xc, yc, rsqr;
-        CircumCircle(triangle.p1.x, triangle.p1.y, triangle.p1.x, triangle.p1.y, triangle.p2.x, triangle.p2.y, triangle.p3.x, triangle.p3.y,
-                     &xc, &yc, &rsqr);
-        circleRGBA(renderer, xc, yc, sqrt(rsqr), 30, 30, 30, SDL_ALPHA_OPAQUE);
-    }
-
-    drawSegments(renderer, app.segments);
-    
-    for(const Polygon& polygon : app.polygons)
-    {
-        drawPolygon(renderer, polygon);
-    }
-
 }
 
 // Fonction de comparaison pour trier les points selon l'axe x
@@ -370,103 +353,30 @@ void delaunayTriangulation(std::vector<Coords>& points, std::vector<Triangle>& t
     }   
 }
 
-
-void construitPolygones(Application& app, std::vector<Polygon>& polygons)
-{
-    printf("construitPolygones\n");
-    polygons.clear();
-
-    for (const Triangle& triangle : app.triangles)
-    {
-        // Vérifier si les points du triangle appartiennent au diagramme de Voronoi
-        bool p1InVoronoi = std::find(app.pointsVoronoi.begin(), app.pointsVoronoi.end(), triangle.p1) != app.pointsVoronoi.end();
-        bool p2InVoronoi = std::find(app.pointsVoronoi.begin(), app.pointsVoronoi.end(), triangle.p2) != app.pointsVoronoi.end();
-        bool p3InVoronoi = std::find(app.pointsVoronoi.begin(), app.pointsVoronoi.end(), triangle.p3) != app.pointsVoronoi.end();
-
-        if (p1InVoronoi && p2InVoronoi && p3InVoronoi)
-        {
-            // Les trois points du triangle appartiennent au diagramme de Voronoi
-            Polygon polygon;
-            polygon.addPoint(triangle.p1.x, triangle.p1.y);
-            polygon.addPoint(triangle.p2.x, triangle.p2.y);
-            polygon.addPoint(triangle.p3.x, triangle.p3.y);
-
-            // Recherche des triangles adjacents
-            std::vector<Triangle> adjacentTriangles;
-
-            for (const Triangle& other : app.triangles)
-            {
-                if (triangle.adjacent(other))
-                {
-                    adjacentTriangles.push_back(other);
-                }
-            }
-
-            // Recherche des centres des cercles circonscrits des triangles adjacents
-            for (const Triangle& adjacent : adjacentTriangles)
-            {
-                float xc, yc, rsqr;
-                CircumCircle(
-                    adjacent.p1.x, adjacent.p1.y,
-                    adjacent.p1.x, adjacent.p1.y,
-                    adjacent.p2.x, adjacent.p2.y,
-                    adjacent.p3.x, adjacent.p3.y,
-                    &xc, &yc, &rsqr
-                );
-
-                polygon.addPoint(static_cast<int>(xc), static_cast<int>(yc));
-            }
-
-            polygons.push_back(polygon);
-        }
-    }
-    //print polygons
-    for (const Polygon& polygon : polygons)
-    {
-        std::cout << "Polygon" << std::endl;
-        for (const Coords& point : polygon.points)
-        {
-            std::cout << point.x << " " << point.y << std::endl;
-        }
-    }
-}
-
 void construitVoronoi(Application &app)
 {
     // Effectuer la triangulation de Delaunay
     delaunayTriangulation(app.points, app.triangles);
-
-    //pour chaque triangle, déterminer les triangles adjacents. Si un triangle et un autre sont adjacents, alors on construit le segment entre les centres de leurs cercles circonscrits
-    for (const Triangle& triangle : app.triangles)
+    std::vector<Polygon> polygons;
+    for (const Coords& point : app.points)
     {
-        for (const Triangle& triangle2 : app.triangles)
+        Polygon polygone;
+        for (const Triangle& triangle : app.triangles)
         {
-            if (triangle.adjacent(triangle2))
+            if (triangle.p1 == point || triangle.p2 == point || triangle.p3 == point)
             {
                 float xc, yc, rsqr;
                 CircumCircle(triangle.p1.x, triangle.p1.y, triangle.p1.x, triangle.p1.y, triangle.p2.x, triangle.p2.y, triangle.p3.x, triangle.p3.y,
                              &xc, &yc, &rsqr);
-                float xc2, yc2, rsqr2;
-                CircumCircle(triangle2.p1.x, triangle2.p1.y, triangle2.p1.x, triangle2.p1.y, triangle2.p2.x, triangle2.p2.y, triangle2.p3.x, triangle2.p3.y,
-                             &xc2, &yc2, &rsqr2);
-
-                //si le point n'est pas dans le très grand triangle, on l'ajoute à la liste des points du diagramme de Voronoi
-                if (xc < 0 || xc > app.width || yc < 0 || yc > app.height)
-                    app.pointsVoronoi.push_back(Coords{xc, yc});
-                if (xc2 < 0 || xc2 > app.width || yc2 < 0 || yc2 > app.height)
-                    app.pointsVoronoi.push_back(Coords{xc2, yc2});
-
-                //on vérifie que le segment n'est pas déjà dans la liste
-                Segment segment{{xc, yc}, {xc2, yc2}};
-                if (std::find(app.segments.begin(), app.segments.end(), segment) == app.segments.end())
-                    app.segments.push_back(segment);
-            }
-
+                //app.pointsVoronoi.push_back({static_cast<int>(xc), static_cast<int>(yc)});
+                polygone.addPoint((int)xc, (int)yc);
+            
         }
-    }   
-    construitPolygones(app, app.polygons);
+        std::sort(polygone.points.begin(), polygone.points.end(), [](const Coords& a, const Coords& b) { return a.x < b.x;});
+        app.polygons.push_back(polygone);
+    }
+    }
 }
-
 
 bool handleEvent(Application &app)
 {
@@ -493,6 +403,8 @@ bool handleEvent(Application &app)
                 app.points.clear();
                 app.pointsVoronoi.clear();
                 app.segments.clear();
+                app.polygons.clear();
+                app.triangles.clear();
             }
             else if (e.button.button == SDL_BUTTON_LEFT)
             {
