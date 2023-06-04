@@ -1,7 +1,7 @@
 CMakeFiles/VoronoiApp.dir/src/application_ui.cpp.o: \
- /home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/src/application_ui.cpp \
+ /home/eniem/S2/Voronoi_Delaunay/src/application_ui.cpp \
  /usr/include/stdc-predef.h \
- /home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/src/application_ui.h \
+ /home/eniem/S2/Voronoi_Delaunay/src/application_ui.h \
  /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_main.h \
  /usr/include/SDL2/SDL_stdinc.h /usr/include/SDL2/SDL_config.h \
  /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \

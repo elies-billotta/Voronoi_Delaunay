@@ -1,0 +1,31 @@
+List:
+
+C'est comme des listes chaînées bidirectionnelles -"It is usually implemented as a doubly-linked list".
+On peut ajouter ou supprimer des éléments quand on veut.
+C'est une allocation dynamique ce qui est différent d'un tableau basique.
+
+Ses avantages sont que l'on peut tout modifier rapidement et que le déplacement a l'intérieur est facile et efficace. sa manipulation aussi est efficace.
+
+Cependant, l'accès aléatoire aux données est pas du tout optimisé. Ca utilise beaucoup plus de mémoire et c'est complexe à implémenter.
+
+Vector:
+Ca c'est direct des tableaux dynamiques. ce qui veut dire que c'est rapide a accéder. on peut donc augmenter la taille du tableau quand on veut.
+
+ses avantages sont donc que ca va vite et que la mémoire est efficacement gérée.
+
+Cependant, l'augmentation de la taille du tableau n'est pas opti, réduire la tableau est très couteux et accéder au milieu du vecteur n'est pas opti.
+
+Deque:
+Ca veut dire double-ended queues, C'est une gestion des données en petits blocs de données que l'on connecte ensemble pour que ca fasse une séquence.
+
+ses avantages sont une insertion rapide du début et de la fin, l'accès aléatoire est optimisé et bon usage de la mémoire
+
+Cependant, comme les vecteurs, le milieu n'est pas optimisé pour la modification, c'est complexe et ca use un peu plus de mémoire que les vecteurs.
+
+
+Map:
+Ici ca change beaucoup c'est un système de Clé-Valeur, on implémente souvent cela dans des "Red–black trees", un arbre binaire de recherche rapide pour la faire courte. 
+
+L'énorme avantage ici est que la modification du tableau a une vitesse logarithmique peu importe la taille donc que cela soit des petites ou des grands packs de données, ca va vite. le tri est automatique aussi
+
+Cependant, c'est dur à implémenter (les arbres de recherches), ca utilise un peu plus de mémoire que pas mal de solution et c'est dans certains cas moins performant que d'autres solutions.

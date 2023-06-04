@@ -1,3 +1,3 @@
-/home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/CMakeFiles/VoronoiApp.dir
-/home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/CMakeFiles/edit_cache.dir
-/home/eniem/IMAC/S2/prog-algo2/Voronoi_Delaunay/CMakeFiles/rebuild_cache.dir
+/home/eniem/S2/Voronoi_Delaunay/CMakeFiles/VoronoiApp.dir
+/home/eniem/S2/Voronoi_Delaunay/CMakeFiles/edit_cache.dir
+/home/eniem/S2/Voronoi_Delaunay/CMakeFiles/rebuild_cache.dir
